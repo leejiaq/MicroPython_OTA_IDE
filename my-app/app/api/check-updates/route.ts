@@ -8,7 +8,11 @@ export async function GET(req: NextRequest) {
 
   const folder = path.join(process.cwd(), "scripts", deviceId);
   const filePath = path.join(folder, "main.mpy");
+  const datePath = path.join(folder, "date.json");
+
+  const fileContent = await fs.readFileSync(datePath, "utf-8");
+  const data = JSON.parse(fileContent);
   if (!fs.existsSync(filePath)) return new NextResponse("none", { status: 200 });
 
-  return new NextResponse("new", { status: 200 });
+  return new NextResponse(data.date, { status: 200 });
 }
