@@ -10,9 +10,9 @@ export async function GET(req: NextRequest) {
   const filePath = path.join(folder, "main.mpy");
   const datePath = path.join(folder, "date.json");
 
+
+  if (!fs.existsSync(filePath)) return new NextResponse("01-01-0001 00:00:00", { status: 200 });
   const fileContent = await fs.readFileSync(datePath, "utf-8");
   const data = JSON.parse(fileContent);
-  if (!fs.existsSync(filePath)) return new NextResponse("none", { status: 200 });
-
   return new NextResponse(data.date, { status: 200 });
 }
