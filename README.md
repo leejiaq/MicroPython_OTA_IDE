@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MicroPython OTA IDE (Next.js + ESP32 Wireless Code Deployment System)
 
-## Getting Started
+MicroPython OTA IDE is a classroom-friendly coding environment that allows students to
+write Python for ESP32 boards directly in the browser, save versioned snapshots,
+and wirelessly deploy code to their MicroPython devices. Designed for iPad and
+laptop use, the system removes the need for USB flashing and makes electronics
+learning much easier.
 
-First, run the development server:
+---
 
+## 🚀 Overview
+
+MicroPython OTA IDE consists of **three parts**:
+
+1. **Next.js Frontend**
+   - Code editor (ACE Editor)
+   - Project system stored in localStorage
+   - Versioned timestamps (10 per project)
+   - Upload code to server (POST `/api/upload`)
+   - View/edit older versions through a modal
+
+2. **Next.js Backend**
+   - Receives Python code
+   - Runs `mpy-cross` to compile `.py` → `.mpy`
+   - Stores compiled `main.mpy` under a device ID
+   - Serves ESP32 with the newest version when requested
+
+3. [**ESP32 (MicroPython)**](https://github.com/leejiaq/MicroPython_OTA_Boot)
+   - Runs `boot.py` at startup
+   - Connects to WiFi
+   - Pings `/firmware/<device_id>` every X seconds
+   - Downloads new `main.mpy` if available
+   - Saves it and executes it
+   - Uses `.mpy` only (faster + smaller)
+
+# MicroPython_OTA_IDE
+
+A lightweight Next.js-based IDE for editing MicroPython projects and deploying them wirelessly (OTA) to ESP32 devices. Includes local project storage, timestamped version history (max 10 snapshots), and a simple API to push .mpy files to MicroPython_OTA_Boot devices.
+
+## Features
+- Browser IDE (ACE editor or Monaco)
+- Project creation & localStorage persistence
+- Version history using `{projectId}_{timestamp}`
+- OTA upload endpoint to ESP32
+- iPad-friendly UI (no animations, no layout shift)
+
+## Development
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
+```
+or
+```bash
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Build
+```bash
+npm run build && npm run start
+```
+or
+```bash
+pnpm build && pnpm start
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API Endpoints
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`POST /api/upload` → send `.mpy` file to device
 
-## Learn More
+`GET /api/status` → ping device
 
-To learn more about Next.js, take a look at the following resources:
+`POST /api/reboot` → reboot device
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project 
