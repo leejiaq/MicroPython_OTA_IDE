@@ -1,0 +1,15 @@
+{
+    "projects": [
+        {
+        "name": "Project 1",
+        "device_name": "esp32-001",
+        "last_modified": "13/11/2025 3:13PM"
+        },
+        {
+        "name": "Project 2",
+        "device_name": "esp32-002",
+        "last_modified": "10/11/2025 11:45AM"
+        }
+    ],
+    "current_project": "Project 1"
+}
